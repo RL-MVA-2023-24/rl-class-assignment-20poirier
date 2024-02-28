@@ -9,7 +9,7 @@ import time
 import numpy as np
 
 MAX_EPISODE_STEP = 200
-NUM_EPISODES = 100
+NUM_EPISODES = 200
 
 env_hiv = TimeLimit(
     env=HIVPatient(domain_randomization=False), max_episode_steps=MAX_EPISODE_STEP
@@ -26,12 +26,17 @@ class QNetwork(nn.Module):
         super(QNetwork, self).__init__()
         self.fc1 = nn.Linear(state_size, 64)
         self.fc2 = nn.Linear(64, 64)
-        self.fc3 = nn.Linear(64, action_size)
+        self.fc3 = nn.Linear(64, 64)
+        self.fc4 = nn.Linear(64, action_size)
 
     def forward(self, state):
-        x = torch.relu(self.fc1(state))
-        x = torch.relu(self.fc2(x))
-        return self.fc3(x)
+        x = self.fc1(state)
+        x = torch.relu(x)
+        x = self.fc2(x)
+        x = torch.relu(x)
+        x = self.fc3(x)
+        x = torch.relu(x)
+        return self.fc4(x)
 
 class ReplayBuffer:
     def __init__(self, capacity):
@@ -117,7 +122,7 @@ if __name__ == "__main__":
 
     state_size = 6
     action_size = 4
-    batch_size = 64
+    batch_size = 8000
     gamma = 0.9
 
     dqn_agent = ProjectAgent(state_size, action_size, batch_size, gamma)
