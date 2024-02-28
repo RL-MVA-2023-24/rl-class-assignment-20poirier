@@ -9,7 +9,7 @@ import time
 import numpy as np
 
 MAX_EPISODE_STEP = 200
-NUM_EPISODES = 20
+NUM_EPISODES = 100
 
 env_hiv = TimeLimit(
     env=HIVPatient(domain_randomization=False), max_episode_steps=MAX_EPISODE_STEP
@@ -102,7 +102,7 @@ def train_agent(agent, env, num_episodes=NUM_EPISODES):
         observation = env.reset()[0]
         total_reward = 0.0
         for n_step in range(MAX_EPISODE_STEP):
-            eps = max(0.1, 0.9 - 0.9 * n_step / MAX_EPISODE_STEP)
+            eps = max(0.1, 0.9 - 0.9 * episode / NUM_EPISODES)
             action = agent.act(observation, epsilon=eps)
             new_observation, reward, done, _, _ = env.step(action)
             agent.train(observation, action, reward, new_observation, done)
