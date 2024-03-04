@@ -15,8 +15,8 @@ env = TimeLimit(
 
 CONFIG = {'state_size':6,
           'action_size': env.action_space.n,
-          'num_layers': 6,
-          'nb_neurons': 256,
+          'num_layers': 4,
+          'nb_neurons': 512,
           'max_episode': 500,
           'learning_rate': 0.005,
           'gamma': 0.95,
@@ -73,10 +73,10 @@ class ProjectAgent:
                 q_values = self.q_network(observation)
                 return torch.argmax(q_values).item()
 
-    def save(self, path = 'best_model_test.pth'):
+    def save(self, path = 'best_model_3.pth'):
         torch.save(self.q_network.state_dict(), path)
 
-    def load(self, path='best_model_test.pth'):
+    def load(self, path='best_model_3.pth'):
         self.q_network.load_state_dict(torch.load(path))
         self.q_network.eval()
 
