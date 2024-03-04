@@ -33,13 +33,15 @@ class QNetwork(nn.Module):
         self.fc1 = nn.Linear(state_size, CONFIG['nb_neurons'])
         for num_layers in range(1, CONFIG['num_layers']-1):
             setattr(self, f'fc{num_layers+1}', nn.Linear(CONFIG['nb_neurons'], CONFIG['nb_neurons']))
-        setattr(self, f'fc{CONFIG['num_layers']}', nn.Linear(CONFIG['nb_neurons'], action_size))
+        num_layers = CONFIG['num_layers']
+        setattr(self, f'fc{num_layers}', nn.Linear(CONFIG['nb_neurons'], action_size))
 
     def forward(self, x):
         for num_layers in range(0, CONFIG['num_layers']-1):
             x = getattr(self, f'fc{num_layers+1}')(x)
             x = torch.relu(x)
-        return getattr(self, f'fc{CONFIG['num_layers']}')(x)
+        num_layers = CONFIG['num_layers']
+        return getattr(self, f'fc{num_layers}')(x)
 
 class Buffer:
     def __init__(self, capacity):
